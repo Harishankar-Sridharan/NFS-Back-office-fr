@@ -1,0 +1,42 @@
+---
+description: >-
+  Compétences, priorités, autorisations et préférences qui déterminent les
+  ressources capables de réaliser une intervention.
+---
+
+# Intégrer les compétences, habilitations et règles d'affectation
+
+Nomadia Field Service choisit les ressources capables de réaliser une intervention à partir de trois mécanismes complémentaires.
+
+| Mécanisme                         | Entités                                                                                                                 | Effet                                                                                                                          |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Compétences                       | Qualification, ResourceQualification, champ QUALIFICATIONS du type d'intervention, de la ressource et de l'intervention | Une ressource doit détenir les compétences exigées. ResourceQualification permet de dater une compétence (STARTDATE, ENDDATE). |
+| Priorités par type d'intervention | TaskPriorities (ressource × type), ResourcePriority (ressource × groupe), priorités par type d'intervenant ou de poste  | Valeur de 0 (impossible) à 100 pour la planification automatique et assistée ; 0 ou 1 pour le placement manuel.                |
+| Autorisations                     | Authorization, champ AUTHORIZATIONS du client et de la ressource                                                        | Habilitations d'accès à un site client.                                                                                        |
+| Préférences client                | Champs REQUIREDRESOURCES, WISHEDRESOURCES, REFUSEDRESOURCES du client, du commanditaire, du projet et de l'intervention | Ressources imposées, souhaitées ou refusées.                                                                                   |
+| Sites et secteurs secondaires     | ResourceWorksite, ResourceDutySector                                                                                    | Une ressource peut intervenir sur d'autres sites que son site principal, éventuellement sur une période.                       |
+
+| Champ             | Type        | Oblig. | Référence | Description                                                                                                                                                                                                  | Exemple / défaut |
+| ----------------- | ----------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- |
+| QUALIFICATIONID   | Identifiant | Oui    |           | Identifiant de la compétence                                                                                                                                                                                 | ex. QUA\_001     |
+| QUALIFICATIONNAME | Chaîne      | Oui    |           | Nom de la compétence tel qu'il apparaîtra à l'utilisateur                                                                                                                                                    |                  |
+| ALWAYSMANDATORY   | Booléen     | Non    |           | La compétence est obligatoire pour pouvoir être affecté à cette intervention. Le rendez-vous ne peut pas être forcé à un technicien n'ayant pas cette compétence (pour les missions dangereuses par exemple) |                  |
+| AREAID            | Réf.        | Non    | Région    | Région à laquelle cette autorisation appartient                                                                                                                                                              | ex. REG\_001     |
+| ACTIVE            | Booléen     | Non    |           | Activation (1,"O",true) / Désactivation du site/client (0,"N",false)                                                                                                                                         | ex. 1 · défaut 1 |
+
+| Champ           | Type         | Oblig. | Référence         | Description                                                                                                                | Exemple / défaut |
+| --------------- | ------------ | ------ | ----------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| RESOURCEID      | Réf.         | Oui    | Ressource humaine | Identifiant de la ressource disposant de cette compétence                                                                  | ex. TECH\_001    |
+| QUALIFICATIONID | Réf.         | Oui    | Compétence        | Identifiant de la compétence                                                                                               | ex. QUA\_001     |
+| STARTDATE       | Date (début) | Non    |                   | Date de début de la période où la ressource dispose de cette compétence. Si pas de date, la compétence était déjà acquise. | ex. DD/MM/YYYY   |
+| ENDDATE         | Date (fin)   | Non    |                   | Date de fin de la période où la ressource dispose de cette compétence. Si pas de date, la compétence n'est jamais perdue.  | ex. DD/MM/YYYY   |
+| ACTION          | Chaîne       | Non    |                   | Verbe d'action pour supprimer l'enregistrement (DELETE)                                                                    |                  |
+
+| Champ                  | Type    | Oblig. | Référence           | Description                                                                                                                                                                                                                                                | Exemple / défaut |
+| ---------------------- | ------- | ------ | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| PRIORITY\_RESOURCEID   | Réf.    | Oui    | Ressource humaine   | Identifiant de la ressource dont il faut mettre à jour les priorités d'affectation pour chaque groupe de types d'intervention                                                                                                                              |                  |
+| PRIORITY\_TASK\_TYPEID | Réf.    | Oui    | Type d'intervention | Identifiant du type d'intervention                                                                                                                                                                                                                         |                  |
+| PRIORITYMANUALOPTIM    | Booléen | Oui    |                     | Valeur à affecter en placement manuel de l'intervention (0 ou 1)                                                                                                                                                                                           | ex. 1            |
+| PRIORITYREALTIMEOPTIM  | Entier  | Oui    |                     | Valeur à affecter en placement assisté en temps réel de l'intervention (0 à 100. 0: impossible de réaliser les types d'intervention de ce groupe, 100: tous les types d'intervention de ce groupe constituent les missions principales de cette ressource) | ex. 100          |
+| PRIORITYBATCHOPTIM     | Entier  | Oui    |                     | Valeur à affecter en placement automatique de l'intervention (0 à 100. 0: impossible de réaliser les types d'intervention de ce groupe, 100: tous les types d'intervention de ce groupe constituent les missions principales de cette ressource)           | ex. 100          |
+| ACTION                 | Chaîne  | Non    |                     | Verbe d'action pour supprimer l'enregistrement (DELETE)                                                                                                                                                                                                    |                  |
